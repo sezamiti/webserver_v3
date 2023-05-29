@@ -3,10 +3,14 @@ package api
 import (
 	"github.com/sezamiti/go2/StandardWebServer/storage"
 	"github.com/sirupsen/logrus"
-	"net/http"
 )
 
-func (a Api) configureLoggerField() error {
+var (
+	prefix string = "/api/v1"
+)
+
+// Пытаемся откунфигурировать наш Api инстанс (а конкретнее - поле logger)
+func (a *Api) configreLoggerField() error {
 	log_level, err := logrus.ParseLevel(a.config.LoggerLevel)
 	if err != nil {
 		return err
@@ -15,13 +19,17 @@ func (a Api) configureLoggerField() error {
 	return nil
 }
 
-func (a *Api) configureRouterField() {
-	a.router.HandleFunc("/", func(w http.ResponseWriter, request *http.Request) {
-		w.Write([]byte("hello! This is rest API"))
-	})
+// Пытаемся отконфигурировать маршрутизатор (а конкретнее поле router Api)
+func (a *Api) configreRouterField() {
+	a.router.HandleFunc(prefix+"/articles", a.GetAllArticles).Methods("GET")
+	a.router.HandleFunc(prefix+"/articles/{id}", a.GetArticleById).Methods("GET")
+	a.router.HandleFunc(prefix+"/articles/{id}", a.DeleteArticleById).Methods("DELETE")
+	a.router.HandleFunc(prefix+"/articles", a.PostArticle).Methods("POST")
+	a.router.HandleFunc(prefix+"/user/register", a.PostUserRegister).Methods("POST")
 
 }
 
+// Пытаемся отконфигурировать наше хранилище (storage Api)
 func (a *Api) configreStorageField() error {
 	storage := storage.New(a.config.Storage)
 	//Пытаемся установить соединениение, если невозможно - возвращаем ошибку!

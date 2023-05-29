@@ -25,11 +25,11 @@ func New(config *Config) *Api {
 
 func (api *Api) Start() error {
 
-	if err := api.configureLoggerField(); err != nil {
+	if err := api.configreLoggerField(); err != nil {
 		return err
 	}
 
 	api.logger.Info("starting api server at port", api.config.BindAddr)
-	api.configureRouterField()
+	api.configreLoggerField()
 	return http.ListenAndServe(api.config.BindAddr, api.router)
 }
