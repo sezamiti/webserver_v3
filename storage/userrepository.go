@@ -39,7 +39,7 @@ func (ur *UserRepository) FindByLogin(login string) (*models.User, bool, error) 
 	return userFinded, founded, nil
 }
 func (ur *UserRepository) SelectAll() ([]*models.User, error) {
-	query := fmt.Sprintf("SELECT * FROM %S", tableUser)
+	query := fmt.Sprintf("SELECT * FROM %s", tableUser)
 	rows, err := ur.storage.db.Query(query)
 	if err != nil {
 		return nil, err

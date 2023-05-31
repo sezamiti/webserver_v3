@@ -21,9 +21,7 @@ func (ar *ArticleRepository) Create(a *models.Article) (*models.Article, error) 
 	if err := ar.storage.db.QueryRow(query, a.Title, a.Author, a.Content).Scan(&a.ID); err != nil {
 		return nil, err
 	}
-
 	return a, nil
-
 }
 
 // Удалять статью по id
