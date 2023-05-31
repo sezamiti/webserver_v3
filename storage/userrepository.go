@@ -31,13 +31,15 @@ func (ur *UserRepository) FindByLogin(login string) (*models.User, bool, error) 
 	var userFinded *models.User
 	for _, u := range users {
 		if u.Login == login {
-			userFinded = u
+			userCopy := *u // Создаем копию пользователя
+			userFinded = &userCopy
 			founded = true
 			break
 		}
 	}
 	return userFinded, founded, nil
 }
+
 func (ur *UserRepository) SelectAll() ([]*models.User, error) {
 	query := fmt.Sprintf("SELECT * FROM %s", tableUser)
 	rows, err := ur.storage.db.Query(query)
@@ -55,5 +57,5 @@ func (ur *UserRepository) SelectAll() ([]*models.User, error) {
 		}
 		users = append(users, &u)
 	}
-	return nil, nil
+	return users, nil
 }
