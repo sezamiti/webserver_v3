@@ -30,6 +30,9 @@ func (api *Api) Start() error {
 	}
 
 	api.logger.Info("starting api server at port", api.config.BindAddr)
-	api.configreLoggerField()
+	api.configreRouterField()
+	if err := api.configreStorageField(); err != nil {
+		return err
+	}
 	return http.ListenAndServe(api.config.BindAddr, api.router)
 }

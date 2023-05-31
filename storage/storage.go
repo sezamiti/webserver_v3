@@ -24,22 +24,24 @@ func New(config *Config) *Storage {
 }
 
 // Open connection method
-func (storage *Storage) Open() error {
-	db, err := sql.Open("postgres", storage.config.DatabaseURI)
+func (s *Storage) Open() error {
+	db, err := sql.Open("postgres", s.config.DatabaseURI)
 	if err != nil {
+		log.Println("Error opening database:", err)
 		return err
 	}
 	if err := db.Ping(); err != nil {
+		log.Println("Error pinging database:", err)
 		return err
 	}
-	storage.db = db
+	s.db = db
 	log.Println("Database connection created successfully!")
 	return nil
 }
 
 // Close connection
-func (storage *Storage) Close() {
-	storage.db.Close()
+func (s *Storage) Close() {
+	s.db.Close()
 }
 
 func (s *Storage) User() *UserRepository {

@@ -18,15 +18,15 @@ func initHeaders(writer http.ResponseWriter) {
 }
 
 // Возвращает все статьи из бд на данный момент
-func (api *Api) GetAllArticles(writer http.ResponseWriter, req *http.Request) {
+func (api *Api) GetAllArticles(writer http.ResponseWriter, _ *http.Request) {
 	//Инициализируем хедеры
 	initHeaders(writer)
 	//Логируем момент начало обработки запроса
-	api.logger.Info("Get All Artiles GET /api/v1/articles")
+	api.logger.Info("Get All Articles GET /api/v1/articles")
 	//Пытаемся что-то получить от бд
 	articles, err := api.storage.Article().SelectAll()
 	if err != nil {
-		//Что делаем, если была ошибка на этапе подключения?
+		//Что делаем, если лоханемся на этапе подключения?
 		api.logger.Info("Error while Articles.SelectAll : ", err)
 		msg := Message{
 			StatusCode: 501,
@@ -47,7 +47,7 @@ func (api *Api) PostArticle(writer http.ResponseWriter, req *http.Request) {
 	var article models.Article
 	err := json.NewDecoder(req.Body).Decode(&article)
 	if err != nil {
-		api.logger.Info("Invalid json recieved from client")
+		api.logger.Info("Invalid json received from client")
 		msg := Message{
 			StatusCode: 400,
 			Message:    "Provided json is invalid",
