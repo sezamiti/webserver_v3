@@ -1,8 +1,10 @@
 package api
 
 import (
+	"github.com/sezamiti/go2/StandardWebServer/internal/app/middleware"
 	"github.com/sezamiti/go2/StandardWebServer/storage"
 	"github.com/sirupsen/logrus"
+	"net/http"
 )
 
 var (
@@ -22,11 +24,17 @@ func (a *Api) configreLoggerField() error {
 // Пытаемся отконфигурировать маршрутизатор (а конкретнее поле router Api)
 func (a *Api) configreRouterField() {
 	a.router.HandleFunc(prefix+"/articles", a.GetAllArticles).Methods("GET")
-	a.router.HandleFunc(prefix+"/articles/{id}", a.GetArticleById).Methods("GET")
+	//Test JWT
+	//a.router.HandleFunc(prefix+"/articles/{id}", a.GetArticleById).Methods("GET")
+	a.router.Handle(prefix+"/articles/{id}", middleware.JwtMiddleware.Handler(
+		http.HandlerFunc(a.GetArticleById),
+	))
+
 	a.router.HandleFunc(prefix+"/articles/{id}", a.DeleteArticleById).Methods("DELETE")
 	a.router.HandleFunc(prefix+"/articles", a.PostArticle).Methods("POST")
 	a.router.HandleFunc(prefix+"/user/register", a.PostUserRegister).Methods("POST")
-
+	//auth
+	a.router.HandleFunc(prefix+"/user/auth", a.PostToAuth).Methods("POST")
 }
 
 // Пытаемся отконфигурировать наше хранилище (storage Api)
